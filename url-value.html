@@ -6,6 +6,7 @@
         values: {}
       },
       valuesChanged:function(oldValues,newValues) { console.log('values Changed');
+        debugger;
         if (oldValues && newValues) {
          // http://stackoverflow.com/questions/6566456/how-to-serialize-a-object-into-a-list-of-parameters
          // TODO add array in url possibilty 
@@ -22,36 +23,39 @@
       ready: function() { console.log('url-value ready');
         // http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
         var query;
+        var hashBased = false;
         if(hashBased) {
-          var pos = location.href.indexOf("?");
-          if(pos==-1) return [];
-            query = location.href.substr(pos+1);
-          } else {
-            query = location.search.substr(1);
+          var pos = location.href.indexOf("#");
+          if(pos==-1) {
+            debugger;
           }
-          var result = {};
-          query.split("&").forEach(function(part) {
-            if (part) {
-              var item = part.split("=");
-              var key = item[0];
-              var from = key.indexOf("[");
-              if(from==-1) {
-                result[key] = decodeURIComponent(item[1]);
+          query = location.href.substr(pos+1);
+        } else {
+          query = location.search.substr(1);
+        }
+        var result = {};
+        query.split("&").forEach(function(part) {
+          if (part) {
+            var item = part.split("=");
+            var key = item[0];
+            var from = key.indexOf("[");
+            if(from==-1) {
+              result[key] = decodeURIComponent(item[1]);
               } else {
-                var to = key.indexOf("]");
-                var index = key.substring(from+1,to);
-                key = key.substring(0,from);
-                if(!result[key]) {
-                  result[key] = [];
-                }
-                if(!index) {
-                  result[key].push(item[1]);
+              var to = key.indexOf("]");
+              var index = key.substring(from+1,to);
+              key = key.substring(0,from);
+              if(!result[key]) {
+                result[key] = [];
+              }
+              if(!index) {
+                result[key].push(item[1]);
                 } else {
-                  result[key][index] = item[1];
-                }
+                result[key][index] = item[1];
               }
             }
-          });
+          }
+        });
         this.values = result;
       }
     });
