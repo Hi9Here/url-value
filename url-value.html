@@ -1,4 +1,56 @@
 <link rel="import" href="../polymer/polymer.html">
 <polymer-element id="ursValue" name="url-value" attributes="values">
-
+  <script>
+    Polymer({
+      publish: {
+        values: {}
+      },
+      valuesChanged:function(oldValues,newValues) { console.log('values Changed');
+        if (oldValues && newValues) {
+         // http://stackoverflow.com/questions/6566456/how-to-serialize-a-object-into-a-list-of-parameters
+          var str = "";
+          for (var key in newValues) {
+            if (str != "") {
+              str += "&"; // &
+            }
+            str += key + "=" + encodeURIComponent(newValues[key]); //=
+          }
+          window.history.pushState(newValues,"", '?'+str);
+        }
+      }, 
+      ready: function() { console.log('url-value ready');
+        // http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
+        var query;
+        if(hashBased) {
+          var pos = location.href.indexOf("?");
+          if(pos==-1) return [];
+            query = location.href.substr(pos+1);
+          } else {
+            query = location.search.substr(1);
+          }
+          var result = {};
+          query.split("&").forEach(function(part) {
+            var item = part.split("=");
+            var key = item[0];
+            var from = key.indexOf("[");
+            if(from==-1) {
+              result[key] = decodeURIComponent(item[1]);
+            } else {
+              var to = key.indexOf("]");
+              var index = key.substring(from+1,to);
+              key = key.substring(0,from);
+              if(!result[key]) {
+                result[key] = [];
+              }
+              if(!index) {
+                result[key].push(item[1]);
+              } else {
+                result[key][index] = item[1];
+              }
+          }
+        });
+        this.values = result;
+      }
+    });
+  </script>
 </polymer-element>
