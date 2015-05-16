@@ -1,6 +1,14 @@
 <link rel="import" href="../polymer/polymer.html">
 <polymer-element id="ursValue" name="url-value" attributes="values">
   <script>
+    function isEmpty(obj) {
+      for(var prop in obj) {
+        if(obj.hasOwnProperty(prop)) {
+          return false;
+        }
+      }
+      return true;
+    }
     Polymer({
       publish: {
         values: {}
