@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<polymer-element id="ursValue" name="url-value" attributes="values">
+<polymer-element id="ursValue" name="url-value" attributes="values hash">
   <script>
     function isEmpty(obj) {
       for(var prop in obj) {
@@ -25,14 +25,17 @@
             }
             str += key + "=" + encodeURIComponent(newValues[key]); //=
           }
-          window.history.pushState(newValues,"", '?'+str);
+          if (this.hash) {
+            window.history.pushState(newValues,"", '#'+str);
+            } else {
+            window.history.pushState(newValues,"", '?'+str);
+          }
         }
       }, 
       ready: function() { console.log('url-value ready');
         // http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
         var query;
-        var hashBased = false;
-        if(hashBased) {
+        if(this.hash) {
           var pos = location.href.indexOf("#");
           if(pos==-1) {
             debugger;
