@@ -1,5 +1,5 @@
 <link rel="import" href="../polymer/polymer.html">
-<polymer-element id="ursValue" name="url-value" attributes="values hash">
+<polymer-element name="url-value" attributes="values hash">
   <script>
     function isEmpty(obj) {
       for(var prop in obj) {
@@ -11,11 +11,11 @@
     }
     Polymer({
       publish: {
-        values: {}
+     //   values: []
       },
-      valuesChanged:function(oldValues,newValues) { console.log('values Changed');
+      valuesChanged:function(oldValues,newValues) { console.log('values Changed');console.log(this.values);
         debugger;
-        if (oldValues && newValues) {
+        if (!isEmpty(oldValues) && !isEmpty(newValues)) {
          // http://stackoverflow.com/questions/6566456/how-to-serialize-a-object-into-a-list-of-parameters
          // TODO add array in url possibilty 
           var str = "";
@@ -25,7 +25,7 @@
             }
             str += key + "=" + encodeURIComponent(newValues[key]); //=
           }
-          if (this.hash) {
+          if (this.hash !== false) {
             window.history.pushState(newValues,"", '#'+str);
             } else {
             window.history.pushState(newValues,"", '?'+str);
@@ -35,34 +35,35 @@
       ready: function() { console.log('url-value ready');
         // http://stackoverflow.com/questions/8486099/how-do-i-parse-a-url-query-parameters-in-javascript
         var query;
-        if(this.hash) {
-          var pos = location.href.indexOf("#");
-          if(pos==-1) {
-            debugger;
-          }
-          query = location.href.substr(pos+1);
-        } else {
+        var pos = location.href.indexOf("#");
+        if(pos==-1) {
           query = location.search.substr(1);
+          this.hash = false;
         }
+        query = location.href.substr(pos+1);
         var result = {};
         query.split("&").forEach(function(part) {
           if (part) {
             var item = part.split("=");
-            var key = item[0];
-            var from = key.indexOf("[");
-            if(from==-1) {
-              result[key] = decodeURIComponent(item[1]);
+            if (item==-1) {
+              result.arg = part.split("/");
               } else {
-              var to = key.indexOf("]");
-              var index = key.substring(from+1,to);
-              key = key.substring(0,from);
-              if(!result[key]) {
-                result[key] = [];
-              }
-              if(!index) {
-                result[key].push(item[1]);
+              var key = item[0];
+              var from = key.indexOf("[");
+              if(from==-1) {
+                result[key] = decodeURIComponent(item[1]);
                 } else {
-                result[key][index] = item[1];
+                var to = key.indexOf("]");
+                var index = key.substring(from+1,to);
+                key = key.substring(0,from);
+                if(!result[key]) {
+                  result[key] = [];
+                }
+                if(!index) {
+                  result[key].push(item[1]);
+                  } else {
+                  result[key][index] = item[1];
+                }
               }
             }
           }
