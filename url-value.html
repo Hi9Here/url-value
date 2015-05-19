@@ -14,8 +14,8 @@
      //   values: []
       },
       valuesChanged:function(oldValues,newValues) { console.log('values Changed');console.log(this.values);
-        debugger;
         if (!isEmpty(oldValues) && !isEmpty(newValues)) {
+        debugger;
          // http://stackoverflow.com/questions/6566456/how-to-serialize-a-object-into-a-list-of-parameters
          // TODO add array in url possibilty 
           var str = "";
@@ -39,15 +39,18 @@
         if(pos==-1) {
           query = location.search.substr(1);
           this.hash = false;
+          } else {
+          query = location.href.substr(pos+1);
         }
-        query = location.href.substr(pos+1);
         var result = {};
         query.split("&").forEach(function(part) {
           if (part) {
-            var item = part.split("=");
-            if (item==-1) {
-              result.arg = part.split("/");
+            isPair = query.indexOf("=");
+            if (isPair==-1) {
+              result = decodeURIComponent(part).split("/");
+              this.args = true;
               } else {
+              var item = part.split("=");
               var key = item[0];
               var from = key.indexOf("[");
               if(from==-1) {
