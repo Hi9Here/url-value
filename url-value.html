@@ -14,7 +14,7 @@
       is: 'url-value', // CONVERTED WIP 
       publish: {
         values:{
-          type: Array,
+          type: Object,
           notify: true
         }
       },
@@ -75,6 +75,7 @@
             }
           }
         });
+        console.log(result);
         this.values = result;
       }
     });
