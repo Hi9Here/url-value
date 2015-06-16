@@ -1,6 +1,7 @@
 <link rel="import" href="../polymer/polymer.html">
-<polymer-element name="url-value" attributes="values hash">
+<dom-module id='url-value'> 
   <script>
+  (function() {
     function isEmpty(obj) {
       for(var prop in obj) {
         if(obj.hasOwnProperty(prop)) {
@@ -10,12 +11,12 @@
       return true;
     }
     Polymer({
+      is: 'url-value', // CONVERTED WIP 
       publish: {
      //   values: []
       },
       valuesChanged:function(oldValues,newValues) { console.log('values Changed');console.log(this.values);
         if (!isEmpty(oldValues) && !isEmpty(newValues)) {
-        debugger;
          // http://stackoverflow.com/questions/6566456/how-to-serialize-a-object-into-a-list-of-parameters
          // TODO add array in url possibilty 
           var str = "";
@@ -74,5 +75,6 @@
         this.values = result;
       }
     });
+  })();
   </script>
-</polymer-element>
+</dom-module>
