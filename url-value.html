@@ -13,7 +13,10 @@
     Polymer({
       is: 'url-value', // CONVERTED WIP 
       publish: {
-     //   values: []
+        values:{
+          type: Array,
+          notify: true
+        }
       },
       valuesChanged:function(oldValues,newValues) { console.log('values Changed');console.log(this.values);
         if (!isEmpty(oldValues) && !isEmpty(newValues)) {
